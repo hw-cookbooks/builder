@@ -1,6 +1,7 @@
 actions :create, :delete
 default_action :create
 
+attribute :init_command, :kind_of => String
 attribute :commands, :kind_of => Array, :default => []
 attribute :custom_cwd, :kind_of => String
 attribute :suffix_cwd, :kind_of => String

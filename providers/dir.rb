@@ -24,7 +24,15 @@ action :create do
           recursive true
         end
       end
- 
+
+      if(new_resource.init_command)
+        execute "initialize(#{new_resource.init_command})" do
+          command new_resource.init_command
+          cwd build_dir
+          environment 'PKG_DIR' => pkg_dir
+        end
+      end
+
       new_resource.commands.each do |command|
         execute "building(#{command})" do
           command command
