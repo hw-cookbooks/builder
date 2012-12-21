@@ -25,6 +25,7 @@ builder_dir 'customapp-1.0.tar.gz' do
     'make install DESTDIR=$PKG_DIR'
   ]
 end
+```
 
 The $PKG_DIR is an environment variable that will be available to
 build commands. The $PKG_DIR is created by the LWRP to provide a
