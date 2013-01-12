@@ -27,6 +27,7 @@ action :create do
 
       remote_file ::File.join(@build_dir, ::File.basename(new_resource.remote_file)) do
         source new_resource.remote_file
+        action :create_if_missing
       end
  
       execute "Unpack remote file: #{::File.basename(new_resource.remote_file)}" do
