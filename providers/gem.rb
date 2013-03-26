@@ -1,3 +1,6 @@
+version = Chef::Version.new(Chef::VERSION)
+use_inline_resources if version.major >= 11
+
 def load_current_resource
   @build_dir = ::File.join(node[:builder][:build_dir], new_resource.name)
   @packaging_dir = ::File.join(node[:builder][:packaging_dir], new_resource.name)
