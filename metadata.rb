@@ -7,3 +7,4 @@ description 'Building helpers'
 version '0.1.3'
 
 depends 'build-essential'
+depends 'ssh_known_hosts'
