@@ -37,6 +37,9 @@ module Builder
       unless(new_resource.creates)
         new_resource.creates @build_dir
       end
+      if(self.respond_to?(:builder_load))
+        builder_load
+      end
     end
 
     def destroy
@@ -60,17 +63,31 @@ module Builder
 
           if(new_resource.create_packaging_directory)
             directory @packaging_dir do
+              action :delete
+              recursive true
+            end
+            
+            directory @packaging_dir do
               recursive true
             end
           end
 
           yield
           
-          new_resource.commands.each do |command|
+          new_resource.commands.each do |com|
+            if(com.is_a?(String))
+              command = com
+              com_env = {}
+            else
+              command = com[:command]
+              com_env = com[:environment]
+            end
             execute "building(#{command})" do
               command command
               cwd exec_cwd
-              environment 'PKG_DIR' => pkg_dir
+              environment(
+                {'PKG_DIR' => pkg_dir}.merge(com_env)
+              )
             end
           end
         rescue Mixlib::ShellOut::ShellCommandFailed
