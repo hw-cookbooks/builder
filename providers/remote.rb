@@ -9,7 +9,7 @@ action :create do
     
     execute "Unpack remote file: #{::File.basename(new_resource.remote_file)}" do
       command "tar -xzf #{::File.basename(new_resource.remote_file)}"
-      cwd build_dir
+      cwd @build_dir
     end
   end
 end
