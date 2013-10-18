@@ -26,9 +26,9 @@ module Builder
           end
         end
       end
-      
+
     end
-    
+
     def load_current_resource
       @build_dir = ::File.join(node[:builder][:build_dir], new_resource.name)
       @packaging_dir = ::File.join(node[:builder][:packaging_dir], new_resource.name)
@@ -48,8 +48,13 @@ module Builder
           action :delete
         end
       end
+
+      builds = Mash.new(node.set[:builder][:builds].to_hash)
+      builds.delete(new_resource.name.to_sym)
+      node.set[:builder][:builds] = builds
+
     end
-    
+
     def build
       unless(::File.exists?(new_resource.creates))
         begin
@@ -66,14 +71,14 @@ module Builder
               action :delete
               recursive true
             end
-            
+
             directory @packaging_dir do
               recursive true
             end
           end
 
           yield
-          
+
           new_resource.commands.each do |com|
             if(com.is_a?(String))
               command = com
@@ -102,6 +107,12 @@ module Builder
           end
           raise
         end
+
+        node.set[:builder][:builds][new_resource.name.to_sym][:build_path] = @build_dir
+        node.set[:builder][:builds][new_resource.name.to_sym][:expanded_path] = @cwd
+        node.set[:builder][:builds][new_resource.name.to_sym][:packaging_path] = @packaging_dir
+        node.set[:builder][:builds][new_resource.name.to_sym][:time] = Time.now.to_i
+
         new_resource.updated_by_last_action(true)
       end
     end
