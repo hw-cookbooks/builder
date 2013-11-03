@@ -1,4 +1,4 @@
-include Builder::Provider
+include ::Builder::Provider
 
 def load_current_resource
   #  new_resource.reference %x{git ls-remote #{new_resource.repository} #{new_resource.reference}}.split.first.strip

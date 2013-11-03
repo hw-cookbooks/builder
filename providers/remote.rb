@@ -1,4 +1,4 @@
-include Builder::Provider
+include ::Builder::Provider
 
 action :create do
   build do
