@@ -32,8 +32,6 @@ module Builder
     def load_current_resource
       @build_dir = ::File.join(node[:builder][:build_dir], new_resource.name)
       @packaging_dir = ::File.join(node[:builder][:packaging_dir], new_resource.name)
-      @cwd = new_resource.custom_cwd || @build_dir
-      @cwd = ::File.join(@cwd, new_resource.suffix_cwd) if new_resource.suffix_cwd
       unless(new_resource.creates)
         new_resource.creates @build_dir
       end
@@ -60,7 +58,6 @@ module Builder
         begin
           build_dir = @build_dir
           pkg_dir = @packaging_dir
-          exec_cwd = @cwd
 
           directory @build_dir do
             recursive true
@@ -79,6 +76,8 @@ module Builder
 
           yield
 
+          build_resource = new_resource
+
           new_resource.commands.each do |com|
             if(com.is_a?(String))
               command = com
@@ -89,7 +88,12 @@ module Builder
             end
             execute "building(#{command})" do
               command command
-              cwd exec_cwd
+              cwd lazy{
+                ::File.join(
+                  build_resource.custom_cwd || build_dir,
+                  build_resource.suffix_cwd || ''
+                )
+              }
               environment(
                 {'PKG_DIR' => pkg_dir}.merge(com_env)
               )
