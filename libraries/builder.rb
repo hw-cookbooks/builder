@@ -6,6 +6,7 @@ module Builder
           actions :create, :delete
           default_action :create
 
+          attribute :environment, :kind_of => Hash, :default => {}
           attribute :commands, :kind_of => Array
           attribute :custom_cwd, :kind_of => String
           attribute :suffix_cwd, :kind_of => String
@@ -94,9 +95,7 @@ module Builder
                   build_resource.suffix_cwd || ''
                 )
               }
-              environment(
-                {'PKG_DIR' => pkg_dir}.merge(com_env)
-              )
+              environment build_resource.environment.merge('PKG_DIR' => pkg_dir).merge(com_env)
             end
           end
         rescue Mixlib::ShellOut::ShellCommandFailed
