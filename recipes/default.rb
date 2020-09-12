@@ -1,1 +1,1 @@
-include_recipe 'build-essential'
+build_essential 'install compilation tools'

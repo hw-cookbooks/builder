@@ -2,7 +2,7 @@ include Builder::Provider
 
 action :create do
   build do
-    if(new_resource.init_command)
+    if new_resource.init_command
       build_dir = @build_dir
       pkg_dir = @pkg_dir
       execute "initialize(#{new_resource.init_command})" do
