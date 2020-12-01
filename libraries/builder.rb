@@ -15,6 +15,7 @@ module Builder
       end
     end
   end
+
   module Provider
     class << self
       def included(klass)
